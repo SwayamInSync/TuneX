@@ -21,7 +21,7 @@ def download_from_hub(
         repo_id: str,
         access_token: Optional[str] = os.getenv("HF_TOKEN"),
         tokenizer_only: bool = False,
-        convert_checkpoint: bool = True,
+        convert_checkpoint: bool = False,
         checkpoint_dir: Path = Path("checkpoints"),
         model_name: Optional[str] = None,
 ) -> None:
@@ -52,8 +52,6 @@ def download_from_hub(
 
     directory = checkpoint_dir / repo_id
     snapshot_download(repo_id, local_dir=directory,
-                      local_dir_use_symlinks=False,
-                      resume_download=True,
                       allow_patterns=files_to_download,
                       token=access_token,
                       )
