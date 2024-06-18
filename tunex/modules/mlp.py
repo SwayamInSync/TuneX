@@ -7,9 +7,9 @@ class MLP(nn.Module):
     def __init__(self, config: Config):
         super(MLP, self).__init__()
 
-        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
+        self.c_fc = nn.Linear(config.n_embd, config.intermediate_size * config.n_embd)
         self.gelu = nn.GELU(approximate=config.gelu_approximate)
-        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+        self.c_proj = nn.Linear(config.intermediate_size * config.n_embd, config.n_embd)
         self.dropout = nn.Dropout(config.resid_dropout)
 
     def forward(self, x):

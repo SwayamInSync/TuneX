@@ -1,4 +1,5 @@
 from dataclasses import dataclass, asdict
+from typing import Optional
 
 
 @dataclass
@@ -15,6 +16,7 @@ class Config:
     bias: bool = True
     lm_head_bias: bool = False
     gelu_approximate: str = ""
+    intermediate_size: int = 4
 
     @classmethod
     def from_model(cls, name: str, **kwargs):
