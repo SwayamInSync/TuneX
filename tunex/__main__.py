@@ -2,8 +2,9 @@ import torch
 from typing import TYPE_CHECKING, Any, Optional
 from jsonargparse import set_config_read_mode, set_docstring_parse_options, CLI
 
-from tunex.utils.download import download_from_hub
-from tunex.chat.base import main as chat_fn
+from tunex import download_from_hub
+from tunex import main as chat_fn
+from tunex.utils.utilities import list_supported_models
 
 if TYPE_CHECKING:
     from jsonargparse import ArgumentParser
@@ -18,10 +19,12 @@ def _new_parser(**kwargs: Any) -> "ArgumentParser":
     )
     return parser
 
+
 def main() -> None:
     parser_data = {
         "download": download_from_hub,
         "chat": chat_fn,
+        "list": list_supported_models,
     }
 
     set_docstring_parse_options(attribute_docstrings=True)

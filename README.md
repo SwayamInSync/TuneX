@@ -3,16 +3,16 @@
 ## Features Roadmap
 
 - [ ] Multiple LLM support
-  - [ ]  GPT2
+  - [x]  GPT2
   - [ ] Llama
   - [ ] Mistral
   - [ ] Gemma
 - [ ] Support for different Tokenizers
-- [ ] Chat Interface support
+- [x] Chat Interface support
 - [ ] Different Prompt Style support
 - [ ] Text generation
-  - [ ] Top-p
-  - [ ] Top-k
+  - [x] Top-p
+  - [x] Top-k
   - [ ] Beam Search
 - [ ] Finetuning Support with different datasets
   - [ ] Full finetuning

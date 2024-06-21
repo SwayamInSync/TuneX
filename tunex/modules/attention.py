@@ -8,8 +8,9 @@ from tunex.config import Config
 class CasualAttention(nn.Module):
     def __init__(self, config: Config):
         super(CasualAttention, self).__init__()
-
         assert config.n_embd % config.n_head == 0
+
+        self.config = config
         self.attn_dropout = nn.Dropout(config.attn_dropout)
         self.proj_dropout = nn.Dropout(config.resid_dropout)
 
@@ -26,7 +27,7 @@ class CasualAttention(nn.Module):
     def forward(self, x):
         B, T, C = x.shape
         qkv = self.c_attn(x)
-        q, k, v = qkv.split(3, dim=2)
+        q, k, v = torch.split(qkv, self.config.n_embd, dim=-1)
         q = q.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)  # (B, num_head, T, q_dim)
         k = k.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)  # (B, num_head, T, k_dim)
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1, 2)  # (B, num_head, T, v_dim)

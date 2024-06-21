@@ -50,6 +50,8 @@ class Tokenizer:
         return torch.tensor(tokens, dtype=torch.int, device=device)
 
     def decode(self, tokens) -> str:
-        tokens = [tokens.item()] if tokens.ndim == 0 else tokens.tolist()
+        if isinstance(tokens, torch.Tensor):
+            tokens = [tokens.item()] if tokens.ndim == 0 else tokens.tolist()
         decoded_string = self.processor.decode(tokens)
         return decoded_string
+

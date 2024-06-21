@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import List, Optional, Tuple
 
 import torch
-from tunex.utils.convert_from_hf_weights import convert_hf_checkpoint
+from huggingface_hub import snapshot_download
+from tunex.utils.convert_from_hf_weights import convert_and_save_hf_checkpoint
+from tunex.utils.utilities import display_title
 
 
 def find_weight_files(repo_id, access_token):
@@ -21,7 +23,7 @@ def download_from_hub(
         repo_id: str,
         access_token: Optional[str] = os.getenv("HF_TOKEN"),
         tokenizer_only: bool = False,
-        convert_checkpoint: bool = False,
+        convert_checkpoint: bool = True,
         checkpoint_dir: Path = Path("checkpoints"),
         model_name: Optional[str] = None,
 ) -> None:
@@ -36,8 +38,10 @@ def download_from_hub(
         model_name: The existing config name to use for this repo_id. This is useful to download alternative weights of
             existing architectures.
     """
-    from huggingface_hub import snapshot_download
+    display_title()
 
+    if model_name is None:
+        model_name = repo_id.split("/")[-1].strip()
     files_to_download = ["tokenizer*", "generation_config.json", "config.json"]
     from_safetensors = False
     if not tokenizer_only:
@@ -73,5 +77,5 @@ def download_from_hub(
 
     if convert_checkpoint and not tokenizer_only:
         print("Converting checkpoint files to TuneX format.")
-        convert_hf_checkpoint(checkpoint_dir=directory, model_name=model_name)
+        convert_and_save_hf_checkpoint(checkpoint_dir=directory, model_name=model_name)
     print(f"Weights are converted and saved at {directory}")

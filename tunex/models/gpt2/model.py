@@ -21,9 +21,9 @@ class Block(nn.Module):
         return x
 
 
-class GPT(nn.Module):
+class GPT2(nn.Module):
     def __init__(self, config: Config):
-        super(GPT, self).__init__()
+        super(GPT2, self).__init__()
         self.config = config
 
         self.transformer = nn.ModuleDict(dict(
@@ -38,6 +38,8 @@ class GPT(nn.Module):
         self.transformer.wte.weight = self.lm_head.weight
 
         self.apply(self._init_weights)
+
+        self.max_sequence_length = config.block_size
 
     def _init_weights(self, module):
         if isinstance(module, nn.Linear):
@@ -59,11 +61,11 @@ class GPT(nn.Module):
         for block in self.transformer.h:
             x = block(x)
         x = self.transformer.ln_f(x)
-        x = self.transformer.lm_head(x)
+        x = self.lm_head(x)
         return x
 
     @classmethod
-    def from_pretrained(cls, model_type):
+    def from_pretrained(cls, model_type, debug=False):
         from huggingface_hub import hf_hub_download
 
         config_args = {
@@ -76,14 +78,17 @@ class GPT(nn.Module):
         config_args['block_size'] = 1024  # always 1024 for GPT model checkpoints
 
         config = Config(**config_args)
-        model = GPT(config)
+        model = GPT2(config)
         sd = model.state_dict()
         sd_keys = sd.keys()
         sd_keys = [k for k in sd_keys if not k.endswith('.attn.bias')]  # discard this mask / buffer, not a param
 
         # downloading weights
         # weights_path = hf_hub_download(repo_id=model_type, filename="pytorch_model.bin")
-        sd_hf = torch.load("../../../checkpoints/gpt2/pytorch_model.bin")
+        if not debug:
+            sd_hf = torch.load("checkpoints/gpt2/pytorch_model.bin")
+        else:
+            sd_hf = torch.load("../../../checkpoints/gpt2/pytorch_model.bin")
         sd_hf['lm_head.weight'] = sd_hf['wte.weight']
         sd_keys_hf = [k for k in sd_hf if not k.endswith('.attn.masked_bias')]  # ignore these, just a buffer
         sd_keys_hf = [k for k in sd_keys_hf if not k.endswith('.attn.bias')]  # same, just the mask (buffer)
@@ -104,11 +109,14 @@ class GPT(nn.Module):
                 with torch.no_grad():
                     sd[p_k].copy_(sd_hf[k])
 
+        print(model.state_dict().keys())
+        print(sd_hf.keys())
+
         return model
 
 
 if __name__ == '__main__':
     # model = GPT.from_pretrained("gpt2")
-    model = GPT(Config.from_model("gpt2"))
-    print(model)
+    # model = GPT2(Config.from_model("gpt2"))
+    model = GPT2.from_pretrained("gpt2", debug=True)
     print("worked")
