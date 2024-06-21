@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "tunex"
+version = "0.1.1"
+description = "A powerful CLI toolkit offering one shot solution for LLM in running, finetuning and instruction tuning"
+authors = ["swayaminsync <hawkempire007@gmail.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+torch = "2.2.2"
+pyyaml = "6.0.1"
+pyfiglet = "0.8.post1"
+numpy = "1.24.4"
+jsonargparse = "4.29.0"
+tokenizers = "0.19.1"
+huggingface-hub = "^0.23.4"
+accelerate = "0.31.0"
+transformers = "4.41.2"
+
+[tool.poetry.scripts]
+tunex = "tunex.__main__:main"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
