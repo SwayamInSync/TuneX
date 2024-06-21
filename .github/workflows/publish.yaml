@@ -1,0 +1,41 @@
+# To create a release, create a tag and push it to GitHub:
+#git tag -a "v0.0.1-beta" -m "beta version testing"
+#git push --tags
+# https://dev.to/iamtekson/publish-package-to-pypi-and-release-new-version-using-github-actions-108k
+
+name: Publish Tunex
+
+on:
+  push:
+    tags:
+      - "v*" # This will trigger the workflow for tags starting with 'v'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x" # Specify the version of Python you need
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Build the package
+        run: poetry build
+
+      - name: Publish to PyPI
+        env:
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish --build --username __token__ --password $PYPI_TOKEN
