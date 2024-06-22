@@ -2,6 +2,8 @@
 name = "tunex"
 version = "0.1.1"
 description = "A powerful CLI toolkit offering one shot solution for LLM in running, finetuning and instruction tuning"
+long_description = "file: README.md"
+long_description_content_type = "text/markdown"
 authors = ["swayaminsync <hawkempire007@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
