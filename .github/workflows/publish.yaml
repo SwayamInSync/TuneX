@@ -18,23 +18,18 @@ jobs:
         with:
           python-version: "3.x" # Specify the version of Python you need
 
-      - name: Install build dependencies
-        run: |
-          pip install setuptools wheel
-
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
 
-      - name: Configure Poetry
+      - name: Build source and wheel distributions
         run: |
-          poetry config virtualenvs.create false
-          poetry install
+          python -m pip install --upgrade build twine
+          python -m build
+          twine check --strict dist/*
 
-      - name: Build the package
-        run: poetry build
-
-      - name: Publish to PyPI
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-        run: poetry publish --build --username __token__ --password $PYPI_TOKEN
+      - name: Publish distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
