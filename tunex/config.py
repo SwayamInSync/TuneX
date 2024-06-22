@@ -109,7 +109,3 @@ gpt2 = [
 Config._supported_models.extend(gpt2)
 
 name_to_config = {config["model_name"]: config for config in Config._supported_models}
-
-if __name__ == "__main__":
-    config = Config.from_model("gpt2-xl")
-    print(asdict(config))

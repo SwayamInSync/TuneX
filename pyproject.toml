@@ -1,6 +1,6 @@
 [project]
 name = "tunex"
-version = "0.1.2"
+version = "0.1.3"
 description = "A powerful CLI toolkit offering one shot solution for LLM in running, finetuning and instruction tuning"
 readme = "README.md"
 license = { text = "Apache-2.0" }

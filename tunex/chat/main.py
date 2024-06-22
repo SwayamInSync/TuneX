@@ -52,30 +52,30 @@ def decode(tokenizer, token_stream):
     return tokens_generated
 
 
-def initialize_interface(model, tokenizer: Tokenizer, temperature, top_k, top_p, stop_tokens, device):
+def initialize_interface(model, tokenizer: Tokenizer, temperature, top_k, top_p, max_returned_tokens, stop_tokens, device):
     display_title()
     print(f"Initiating chat mode with {model.config.model_name}\n")
     print(f"Setting sead to {SEED}\n")
 
     while True:
         try:
-            prompt = input(">> Prompt: ")
-            # print(">> Prompt: (Type '!exit' on a new line to end input).")
-            # prompt_lines = []
-            # while True:
-            #     line = input()
-            #     if line.strip().lower() == "!exit":
-            #         break
-            #     prompt_lines.append(line)
-            # prompt = "\n".join(prompt_lines)
+            # prompt = input(">> Prompt: ")
+            print(">> Prompt: (Type '<eos>' on a new line to end input).")
+            prompt_lines = []
+            while True:
+                line = input()
+                if line.strip().lower() == "<eos>":
+                    break
+                prompt_lines.append(line)
+            prompt = "\n".join(prompt_lines)
         except KeyboardInterrupt:
             break
         prompt = prompt.lower().strip()
-        if not prompt or prompt in ("!quit", "!exit"):
+        if not prompt or prompt == "<eos>":
             break
         encoded_inputs = tokenizer.encode(prompt, device=device)
         token_stream = generate(model, encoded_inputs, top_p, top_k,
-                                temperature, model.max_sequence_length, stop_tokens)
+                                temperature, max_returned_tokens, stop_tokens)
         print(">> Response: ", end="")
 
         t0 = time.perf_counter()
@@ -93,6 +93,7 @@ def main(checkpoint_dir: str,
          top_k: int = 200,
          top_p: float = 1.0,
          temperature: float = 0.99,
+         max_returned_tokens: int = 200,
          device: torch.device = torch.device("cpu")
          ) -> None:
     """Chat with the model.
@@ -103,6 +104,7 @@ def main(checkpoint_dir: str,
             top_p: Represents the cumulative probability threshold to consider in the sampling process.
             temperature: A value controlling the randomness of the sampling process. Higher values result in more random
             samples.
+            max_returned_tokens: The maximum number of tokens to return.
             device: The device to run the model on (cpu, cuda:0, cuda:1, etc.).
         """
     checkpoint_dir = Path(checkpoint_dir)
@@ -117,4 +119,4 @@ def main(checkpoint_dir: str,
 
     stop_tokens = ([tokenizer.eos_id],)
     model.eval()
-    initialize_interface(model, tokenizer, temperature, top_k, top_p, stop_tokens, device)
+    initialize_interface(model, tokenizer, temperature, top_k, top_p, max_returned_tokens, stop_tokens, device)
