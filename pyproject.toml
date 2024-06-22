@@ -26,6 +26,5 @@ tunex = "tunex.__main__:main"
 requires = [
     "setuptools>=68.2.2",
     "wheel>=0.41.2",
-    "poetry-core"
 ]
-build-backend = "poetry.core.masonry.api"
+build-backend = "setuptools.build_meta"
