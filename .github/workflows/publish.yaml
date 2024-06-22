@@ -18,6 +18,10 @@ jobs:
         with:
           python-version: "3.x" # Specify the version of Python you need
 
+      - name: Install build dependencies
+        run: |
+          pip install setuptools wheel
+
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
