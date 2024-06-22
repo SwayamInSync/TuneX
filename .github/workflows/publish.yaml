@@ -3,7 +3,7 @@ name: Publish Python Package
 on:
   push:
     tags:
-      - "v*" # This will trigger the workflow for tags starting with 'v'
+      - 'v*'  # This will trigger the workflow for tags starting with 'v'
 
 jobs:
   publish:
@@ -16,20 +16,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.x" # Specify the version of Python you need
+          python-version: '3.x'  # Specify the version of Python you need
 
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
 
+       - name: Install build dependencies
+        run: |
+          pip install setuptools wheel
+
       - name: Configure Poetry
         run: |
           poetry config virtualenvs.create false
           poetry install
-
-      - name: Set environment variable to use legacy build system
-        run: |
-          echo "PIP_USE_PEP517=false" >> $GITHUB_ENV
 
       - name: Build the package
         run: poetry build
@@ -37,5 +37,4 @@ jobs:
       - name: Publish to PyPI
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          PIP_USE_PEP517: "false"
         run: poetry publish --build --username __token__ --password $PYPI_TOKEN
