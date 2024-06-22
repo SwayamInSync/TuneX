@@ -3,7 +3,7 @@ name: Publish Python Package
 on:
   push:
     tags:
-      - 'v*'  # This will trigger the workflow for tags starting with 'v'
+      - "v*"  # This will trigger the workflow for tags starting with 'v'
 
 jobs:
   publish:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Specify the version of Python you need
+          python-version: "3.x"  # Specify the version of Python you need
 
       - name: Install Poetry
         run: |
