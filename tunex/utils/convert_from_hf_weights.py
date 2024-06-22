@@ -39,10 +39,10 @@ def gpt2_checkpointing(state_dict: Dict[str, torch.Tensor], hf_weights) -> None:
         "h.{}.mlp.c_proj.bias": "transformer.h.{}.mlp.c_proj.bias",
     }
 
-    transposed = ['attn.c_attn.weight', 'attn.c_proj.weight', 'mlp.c_fc.weight', 'mlp.c_proj.weight']
+    transposed = ['attn.c_attn.weight', 'attn.c_proj.weight',
+                  'mlp.c_fc.weight', 'mlp.c_proj.weight']
 
     for name, param in hf_weights.items():
-        print(name)
         if "h." in name:
             from_name, number = get_layer_pos(name, 1)
             to_name = weight_map[from_name].format(number)
@@ -66,7 +66,8 @@ def convert_and_save_hf_checkpoint(checkpoint_dir: Path, model_name: str) -> Non
         copy_fn = partial(gpt2_checkpointing)
 
     if copy_fn is None:
-        raise ValueError(f"No conversion function corresponding to {model_name} is found")
+        raise ValueError(
+            f"No conversion function corresponding to {model_name} is found")
 
     state_dict = {}
 
@@ -90,5 +91,3 @@ def convert_and_save_hf_checkpoint(checkpoint_dir: Path, model_name: str) -> Non
 
     # Save the model state dictionary
     torch.save(state_dict, (checkpoint_dir / "tunex_model.pth").as_posix())
-
-
