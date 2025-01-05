@@ -105,7 +105,68 @@ gpt2 = [
     )
 ]
 
+llama = [
+    # https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct/blob/main/config.json
+    dict(
+        model_name="llama-3.3-70B-instruct",
+        model_type="llama",
+        block_size=2048,
+        n_layer=80,
+        n_head=64,
+        n_embd=9216,
+        vocab_size=32000,
+        attn_dropout=0.1,
+        resid_dropout=0.1,
+        embd_dropout=0.1,
+        gelu_approximate="tanh",
+    ),
+    # https://huggingface.co/meta-llama/Llama-3.2-90B-Vision-Instruct/blob/main/config.json
+    dict(
+        model_name="llama-3.2-90B-vision-instruct",
+        model_type="llama",
+        block_size=2048,
+        n_layer=96,
+        n_head=72,
+        n_embd=12288,
+        vocab_size=32000,
+        attn_dropout=0.1,
+        resid_dropout=0.1,
+        embd_dropout=0.1,
+        gelu_approximate="tanh",
+    ),
+    # https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct/blob/main/config.json
+    dict(
+        model_name="llama-3.2-11B-vision-instruct",
+        model_type="llama",
+        block_size=2048,
+        n_layer=24,
+        n_head=32,
+        n_embd=4096,
+        vocab_size=32000,
+        attn_dropout=0.1,
+        resid_dropout=0.1,
+        embd_dropout=0.1,
+        gelu_approximate="tanh",
+    ),
+    # https://huggingface.co/meta-llama/Llama-3.1-70B-Instruct/blob/main/config.json
+    dict(
+        model_name="llama-3.1-70B-instruct",
+        model_type="llama",
+        block_size=2048,
+        n_layer=80,
+        n_head=64,
+        n_embd=9216,
+        vocab_size=32000,
+        attn_dropout=0.1,
+        resid_dropout=0.1,
+        embd_dropout=0.1,
+        gelu_approximate="tanh",
+    ),
+]
+
+
 
 Config._supported_models.extend(gpt2)
+Config._supported_models.extend(llama)
 
 name_to_config = {config["model_name"]: config for config in Config._supported_models}
