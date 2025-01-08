@@ -136,3 +136,4 @@ optional arguments:
 - [@litgpt](https://github.com/Lightning-AI/litgpt)
 - [@torchtune](https://github.com/pytorch/torchtune)
 - [@unsloth](https://github.com/unslothai/unsloth)
+- [@vllm](https://github.com/vllm-project/vllm)
